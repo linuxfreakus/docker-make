@@ -4,7 +4,7 @@ import logging
 import yaml
 import docker
 from docker import utils as docker_utils
-from docker_squash import squash_utils
+from docker_squash import squash as squash_utils
 
 from dmake.errors import *  # noqa
 
