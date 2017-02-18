@@ -127,4 +127,6 @@ def squash(image_id):
     try:
         return squash_utils.Squash(log=LOG, image=image_id, cleanup=true).run()
     except:
+        e = sys.exc_info()[1]
+        LOG.exception(e)
         raise BuildFailed("failed to squash image_id=%s" % (image_id))
