@@ -4,6 +4,7 @@ import logging
 import yaml
 import docker
 from docker import utils as docker_utils
+from docker_squash import squash_utils
 
 from dmake.errors import *  # noqa
 
@@ -120,3 +121,10 @@ def expand_wants(candidates, wants):
             if dep not in ret:
                 wants.add(dep)
     return ret
+
+
+def squash(image_id):
+    try:
+        return squash_utils.Squash(log=LOG, image=image_id, cleanup=true).run()
+    except:
+        raise BuildFailed("failed to squash image_id=%s" % (image_id))

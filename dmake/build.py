@@ -16,7 +16,8 @@ LOG = logging.getLogger(__name__)
 class Build(object):
     def __init__(self, name, context, dockerfile,
                  dockerignore=None, labels=None, depends_on=None,
-                 extract=None, pushes=None, rewrite_from=None):
+                 extract=None, pushes=None, rewrite_from=None,
+                 squash=False):
         self.name = name
         self.context = os.path.join(os.getcwd(), context.lstrip('/'))
         self.dockerfile = dockerfile
@@ -183,6 +184,8 @@ class Build(object):
 
         try:
             image_id = self._do_build(params)
+            if self.squash:
+                image_id = utils.squash(image_id = image_id)
         finally:
             if created_dockerignore:
                 os.remove(dockerignore)
