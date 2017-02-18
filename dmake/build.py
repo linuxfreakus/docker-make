@@ -26,6 +26,7 @@ class Build(object):
             self.dockerignore.append('.dockerignore')
         self.depends_on = depends_on or []
         self.rewrite_from = rewrite_from
+        self.squash = squash
 
         self.collect_pushes(pushes)
         self.collect_labels(labels)
