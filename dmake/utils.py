@@ -126,7 +126,7 @@ def expand_wants(candidates, wants):
 
 def squash(image_id):
     try:
-        return squash_utils.Squash(log=LOG, image=image_id, cleanup=true).run()
+        return squash_utils.Squash(log=LOG, image=image_id, cleanup=True).run()
     except:
         e = sys.exc_info()[1]
         LOG.exception(e)
