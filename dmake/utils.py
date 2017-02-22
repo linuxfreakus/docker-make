@@ -126,7 +126,11 @@ def expand_wants(candidates, wants):
 
 def squash(image_id):
     try:
-        return squash_utils.Squash(log=LOG, image=image_id, cleanup=True).run()
+        if len(docker_client().history(image_id)) > 1:
+            return squash_utils.Squash(log=LOG, image=image_id, cleanup=True).run()
+        else:
+            LOG.debug("image_id %s is already squashed" % (image_id))
+            return image_id
     except:
         e = sys.exc_info()[1]
         LOG.exception(e)
