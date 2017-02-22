@@ -126,6 +126,10 @@ def expand_wants(candidates, wants):
 
 def squash(image_id):
     try:
+        history = docker_client().history(image_id)
+        num_layers = len(history)
+        LOG.debug("history: %s" % (history))
+        LOG.debug("num_layers: %s" % (num_layers))
         if len(docker_client().history(image_id)) > 1:
             return squash_utils.Squash(log=LOG, image=image_id, cleanup=True).run()
         else:
