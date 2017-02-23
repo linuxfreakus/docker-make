@@ -131,7 +131,7 @@ def squash(image_id):
         LOG.debug("history: %s" % (history))
         LOG.debug("num_layers: %s" % (num_layers))
         if len(docker_client().history(image_id)) > 1:
-            return squash_utils.Squash(log=LOG, image=image_id, cleanup=True).run()
+            return squash_utils.Squash(log=LOG, image=image_id).run()
         else:
             LOG.debug("image_id %s is already squashed" % (image_id))
             return image_id

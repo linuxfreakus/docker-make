@@ -186,6 +186,7 @@ class Build(object):
         try:
             image_id = self._do_build(params)
             if self.squash:
+                self.docker.tag(image_id, self.name, "raw")
                 image_id = utils.squash(image_id = image_id)
         finally:
             if created_dockerignore:
