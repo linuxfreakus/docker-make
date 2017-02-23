@@ -99,17 +99,23 @@ class Build(object):
             self._extract_contents(self.final_image, self.extract)
             self._update_progress("extracting archives succeed")
 
+        if self.squash:
+            self._update_progress("creating squashed image")
+            self.squashed_image = utils.squash(image_id=self.final_image)
+            self._update_progress("creating squashed image succeed")
+
     def tag(self):
         template_kwargs = template_args.tag_template_args()
         for push_mode, repo, tag_template in self.pushes:
             need_push = self.need_push(push_mode)
             try:
+                tag_image = self.squash if self.squashed_image else self.final_image
                 tag_name = tag_template.format(**template_kwargs)
                 kwargs = {}
                 if docker_utils.compare_version('1.22',
                                                 self.docker._version) < 0:
                     kwargs['force'] = True
-                self.docker.tag(self.final_image, repo, tag_name, **kwargs)
+                self.docker.tag(tag_image, repo, tag_name, **kwargs)
                 self._update_progress("tag added: %s:%s" % (repo, tag_name))
             except KeyError as e:
                 if need_push:
@@ -185,9 +191,6 @@ class Build(object):
 
         try:
             image_id = self._do_build(params)
-            if self.squash:
-                self.docker.tag(image_id, self.name, "raw")
-                image_id = utils.squash(image_id = image_id)
         finally:
             if created_dockerignore:
                 os.remove(dockerignore)
