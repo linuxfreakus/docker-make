@@ -93,6 +93,7 @@ class Build(object):
         else:
             self.final_image = self.non_labeled_image
         self._update_progress("build succeed: %s" % self.final_image)
+        self.docker.tag(self.final_image, self.name, "raw")
 
         if self.extract:
             self._update_progress("extracting archives")
@@ -102,6 +103,7 @@ class Build(object):
         if self.squash:
             self._update_progress("creating squashed image")
             self.squashed_image = utils.squash(image_id=self.final_image)
+            self.docker.tag(self.final_image, self.name, "squashed")
             self._update_progress("creating squashed image succeed")
 
     def tag(self):
