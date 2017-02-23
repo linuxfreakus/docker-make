@@ -109,7 +109,7 @@ class Build(object):
         for push_mode, repo, tag_template in self.pushes:
             need_push = self.need_push(push_mode)
             try:
-                tag_image = self.squash if self.squashed_image else self.final_image
+                tag_image = self.squashed_image if self.squash else self.final_image
                 tag_name = tag_template.format(**template_kwargs)
                 kwargs = {}
                 if docker_utils.compare_version('1.22',
