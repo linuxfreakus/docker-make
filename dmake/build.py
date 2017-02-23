@@ -189,6 +189,7 @@ class Build(object):
         params = {
             'path': self.context,
             'dockerfile': self.dockerfile,
+            'rm': True,
         }
 
         try:
@@ -209,6 +210,7 @@ class Build(object):
 
         params = {
             'fileobj': pfile,
+            'rm': True,
         }
 
         try:
