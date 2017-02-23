@@ -103,7 +103,7 @@ class Build(object):
         if self.squash:
             self._update_progress("creating squashed image")
             self.squashed_image = utils.squash(image_id=self.final_image)
-            self.docker.tag(self.final_image, self.name, "squashed")
+            self.docker.tag(self.squashed_image, self.name, "squashed")
             self._update_progress("creating squashed image succeed")
 
     def tag(self):
