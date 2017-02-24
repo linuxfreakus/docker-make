@@ -2,7 +2,6 @@ import os
 import tempfile
 import logging
 
-import json
 from docker import utils as docker_utils
 
 from dmake import utils
@@ -190,6 +189,7 @@ class Build(object):
             'path': self.context,
             'dockerfile': self.dockerfile,
             'rm': True,
+            'decode': True,
         }
 
         try:
@@ -211,6 +211,7 @@ class Build(object):
         params = {
             'fileobj': pfile,
             'rm': True,
+            'decode': True,
         }
 
         try:
@@ -224,16 +225,14 @@ class Build(object):
     def _do_build(self, params):
         response = self.docker.build(**params)
         image_id = None
-        for data in response:
-            for line in data.splitlines():
-                ret = json.loads(line)
-                if 'stream' in ret:
-                    msg = ret['stream']
-                    LOG.debug("%s: %s" % (self.name, msg))
-                if 'errorDetail' in ret:
-                    raise BuildFailed(ret['errorDetail']['message'])
-                if 'Successfully built' in ret.get('stream', ''):
-                    image_id = ret['stream'].strip().split()[-1]
+        for obj in response:
+            if 'stream' in obj:
+                msg = obj['stream']
+                LOG.debug("%s: %s" % (self.name, msg))
+            if 'errorDetail' in ret:
+                raise BuildFailed(obj['errorDetail']['message'])
+            if 'Successfully built' in ret.get('stream', ''):
+                image_id = obj['stream'].strip().split()[-1]
         return image_id
 
     def _do_push(self, repo, tag):
