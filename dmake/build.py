@@ -229,9 +229,9 @@ class Build(object):
             if 'stream' in obj:
                 msg = obj['stream']
                 LOG.debug("%s: %s" % (self.name, msg))
-            if 'errorDetail' in ret:
+            if 'errorDetail' in obj:
                 raise BuildFailed(obj['errorDetail']['message'])
-            if 'Successfully built' in ret.get('stream', ''):
+            if 'Successfully built' in obj.get('stream', ''):
                 image_id = obj['stream'].strip().split()[-1]
         return image_id
 
